@@ -1,0 +1,53 @@
+# Node modules
+node_modules/
+
+# Expo
+.expo/
+.expo-shared/
+
+# macOS 系统垃圾文件
+.DS_Store
+
+# TypeScript build cache
+*.tsbuildinfo
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment files (如需设置 Firebase 或私钥等)
+.env
+.env.*
+
+# VS Code settings
+.vscode/
+
+# Build output (apk / ios / web)
+dist/
+build/
+android/app/build/
+ios/build/
+web-build/
+
+# Expo cloud build metadata
+*.jks
+*.p8
+*.p12
+*.mobileprovision
+
+# iOS specific (ejected项目才有)
+ios/Pods/
+ios/Podfile.lock
+ios/Podfile~
+
+# Android specific (ejected项目才有)
+android/.gradle/
+android/.idea/
+android/local.properties
+
+# Prettier cache
+.prettiercache
+
+# React Native packager cache
+$TMPDIR/metro-cache/
