@@ -32,7 +32,22 @@ export default function RootLayout() {
           }}
         />
 
-        <Stack.Screen name="aiBattle/aiGame" />
+        <Stack.Screen 
+          name="aiBattle/aiGame"
+          options={{
+            title: "智能对战",
+            headerBackTitle: "调整难度",
+            headerStyle: {
+              backgroundColor: '#1e1e2e',  // 背景色
+            },
+            headerTintColor: '#ffd33d',     // 返回箭头 和 标题文字颜色
+            headerTitleStyle: {
+              fontWeight: 'bold',
+              fontSize: 20,
+            },
+          }}
+        />
+
         <Stack.Screen
           name="+not-found"
           options={{

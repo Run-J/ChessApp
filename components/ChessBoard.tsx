@@ -1,84 +1,61 @@
+// components/ChessBoard.tsx
 import { useChessStore } from '@/stores/useChessStore';
 import { Alert, StyleSheet, View } from 'react-native';
 import Chessboard from 'react-native-chessboard'; // UI 上显示棋盘，响应用户点击
 
+interface ChessBoardProps {
+  getOpponentMove?: (fen: string) => Promise<string | null>; // 对手走法逻辑（AI、玩家、或null）
+}
 
-export default function ChessBoard() {
-  const fen = useChessStore((state) => state.fen);
-  const makeMove = useChessStore((state) => state.makeMove);
+export default function ChessBoard({ getOpponentMove }: ChessBoardProps) {
+    const fen = useChessStore((state) => state.fen);
+    const makeMove = useChessStore((state) => state.makeMove);
 
 
-  // 当用户点击棋盘上的棋子或格子
+  // 当用户成功移动了棋盘上的棋子
   const onMove = async (info: any) => {
-    console.log("info", info);
-    
+    console.log("User Moved Info:", info);
+
     // 适配 react-native-chessboard 的 ChessMoveInfo 类型
     const from = info?.move?.from;
     const to = info?.move?.to;
     const promotion = info?.move?.promotion;
 
     if (!from || !to) {
-      console.log('从 ChessBoard 中 获取到了无效的走法信息！');
+        console.log('ChessBoard 反馈获下了无效的走法信息！');
+        return;
+    }
+
+    const success = makeMove({ from, to, promotion }); // 同步下棋我们ChessStore里维持的棋盘
+    if (!success) {
+      Alert.alert('走定和ChessStore维持的棋盘状态不一致');
       return;
     }
 
-    const success = makeMove ({ from, to, promotion});
-
-    if (!success) {
-      Alert.alert("非法走棋");
-    }
-
-
-    // 获取新的 FEN（刚才走完之后的）
+    // 获取新的 FEN（ 刚才本方玩家走完之后的棋局 ）
     const newFen = useChessStore.getState().fen;
-    console.log('Fen before AI move:', newFen);
-    console.log(useChessStore.getState().game.ascii());
+    console.log('Fen before AI/OpponentPlayer move:', newFen);
 
-    // 获取 AI 最佳走法
-    const aiMove = await fetchBestMove(newFen);
-    if (!aiMove) return;
+    // 如果没有提供 getOpponentMove，就退出（自走棋）
+    if (!getOpponentMove) return;
 
-    const aiFrom = aiMove.substring(0, 2);
-    const aiTo = aiMove.substring(2, 4);
-    const aiPromotion = aiMove.length === 5 ? aiMove[4] : undefined;
+    // 获取 AI/对手玩家 的走法
+    const opponentMove = await getOpponentMove(newFen);
+    if (!opponentMove) return;
 
-    console.log('ai From:', aiFrom);
-    console.log('ai To:', aiTo);
+    // 解析 AI/对手玩家 走法
+    const oppFrom = opponentMove.substring(0, 2);
+    const oppTo = opponentMove.substring(2, 4);
+    const oppPromotion = opponentMove.length === 5 ? opponentMove[4] as 'q' | 'r' | 'b' | 'n' : undefined;
 
-    // 让 AI 也走一步（makeMove 会更新 FEN）
-    const aiSuccess = makeMove({ from: aiFrom, to: aiTo, promotion: aiPromotion });
-    console.log('Fen after AI move:', useChessStore.getState().fen);
-    console.log(useChessStore.getState().game.ascii());
-
-    if (!aiSuccess) {
-      console.warn("AI 走棋失败");
+    const oppSuccess = makeMove({ from: oppFrom, to: oppTo, promotion: oppPromotion }); // 同步下棋我们ChessStore里维持的棋盘
+    if (!oppSuccess) {
+      console.warn("对手走棋失败/错误; 与ChessStore维持的棋盘状态不符");
     }
 
+    console.log('Fen after AI/OpponentPlayer move:', useChessStore.getState().fen);
+    console.log(useChessStore.getState().game.ascii());
   };
-
-
-  const fetchBestMove = async (fen: string) => {
-    try {
-      const res = await fetch('http://192.168.1.30:3001/best-move', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ fen }),
-      });
-
-      const data = await res.json();
-
-      console.log("AI response:", data);
-      
-      return data.move; // 比如 "e2e4"
-
-    } catch (error) {
-      console.error('AI 走法获取失败', error);
-      Alert.alert("AI 请求失败", "无法从服务器获取 AI 走法，请检查网络或服务状态。");
-      return null;
-    }
-  };
-
-
 
   return (
     <View style={styles.container}>
