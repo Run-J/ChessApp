@@ -7,9 +7,31 @@ export default function RootLayout() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <StatusBar style="dark" />
-      <Stack screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="(tabs)" />
-        <Stack.Screen name="aiBattle/difficulty" />
+      <Stack>
+        <Stack.Screen 
+          name="(tabs)"
+          options={{
+            headerShown: false,
+          }} 
+        
+        />
+
+        <Stack.Screen 
+          name="aiBattle/difficulty"
+          options={{
+            title: "难度选择",
+            headerBackTitle: "返回",
+            headerStyle: {
+              backgroundColor: '#1e1e2e',  // 背景色
+            },
+            headerTintColor: '#ffd33d',     // 返回箭头 和 标题文字颜色
+            headerTitleStyle: {
+              fontWeight: 'bold',
+              fontSize: 20,
+            },
+          }}
+        />
+
         <Stack.Screen name="aiBattle/aiGame" />
         <Stack.Screen
           name="+not-found"
