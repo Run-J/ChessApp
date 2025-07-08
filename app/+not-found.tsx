@@ -7,7 +7,7 @@ export default function NotFoundScreen() {
             <Stack.Screen options={{ title: "哈，访问了错误界面～" }} />
             <View style={styles.container}>
                 <Link href="/" style={styles.button}>
-                    点击返回主页
+                    点击此处返回主页
                 </Link>
             </View>
         </>
@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     button: {
-        fontSize: 20,
+        fontSize: 25,
         textDecorationLine: 'underline',
         color: '#fff',
     }
