@@ -1,5 +1,5 @@
-import { View, StyleSheet } from 'react-native';
 import ChessBoard from '@/components/ChessBoard';
+import { StyleSheet, View } from 'react-native';
 
 export default function Index() {
   return (

@@ -17,14 +17,14 @@ export default function ChessBoard() {
     const promotion = info?.move?.promotion;
 
     if (!from || !to) {
-      console.log('无效的走法信息！');
+      console.log('从 ChessBoard 中 获取到了无效的走法信息！');
       return;
     }
 
     const success = makeMove ({ from, to, promotion});
 
     if (!success) {
-      Alert.alert("非法走定");
+      Alert.alert("非法走棋");
     }
   };
 
