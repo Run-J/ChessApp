@@ -12,8 +12,11 @@ export default function ChessBoard({ getOpponentMove }: ChessBoardProps) {
     const makeMove = useChessStore((state) => state.makeMove);
     const gameStatus = useChessStore((state) => state.game);
     const turn = useChessStore((state) => state.turn);
+    const moves = useChessStore((state) => state.moves);
 
-    let statusText = ''; // 反馈给玩家当前棋局状态
+
+    // 推导对局状态信息文字；反馈给玩家当前棋局状态
+    let statusText = '';
 
     if (gameStatus.isGameOver()) {
       if (gameStatus.isCheckmate()) {
@@ -31,7 +34,7 @@ export default function ChessBoard({ getOpponentMove }: ChessBoardProps) {
       statusText = turn === 'w' ? '白方被将军！' : '黑方被将军！';
     } else {
       statusText = turn === 'w' ? '轮到白方走棋' : '轮到黑方走棋';
-    }
+  }
 
 
 
@@ -82,12 +85,18 @@ export default function ChessBoard({ getOpponentMove }: ChessBoardProps) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.statusText}>{statusText}</Text>
+
+      <View style={styles.infoBox}>
+        <Text style={styles.statusText}>🎯 {statusText}</Text>
+        <Text style={styles.metaText}>🔁 回合数：{Math.ceil(moves.length / 2)}</Text>
+      </View>
+
       <Chessboard 
         key={fen}
         fen={fen} // 显示当前棋盘状态 来自store
         onMove={onMove} // 用户点击后触发
       />
+
     </View>
   );
 }
@@ -98,11 +107,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  infoBox: {
+    marginBottom: 16,
+    alignItems: 'center',
+    paddingHorizontal: 12,
+  },
   statusText: {
     color: '#ffffff',
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: 'bold',
-    marginBottom: 12,
+    marginBottom: 8,
   },
-
+  metaText: {
+    color: '#aaa',
+    fontSize: 14,
+    marginBottom: 2,
+  },
 });
