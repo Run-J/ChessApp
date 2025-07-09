@@ -2,6 +2,7 @@ import ChessBoard from '@/components/ChessBoard';
 import GeneralButton from '@/components/GeneralButton';
 import { useChessStore } from '@/stores/useChessStore';
 import { useLocalSearchParams } from 'expo-router';
+import { useEffect } from 'react';
 import { Alert, StyleSheet, Text, View } from 'react-native';
 
 
@@ -30,6 +31,11 @@ export default function AiGameScreen() {
       return null;
     }
   };
+
+
+  useEffect(() => {
+    useChessStore.getState().resetGame();
+  }, []);
 
   return (
     <View style={styles.container}>

@@ -1,7 +1,8 @@
 // app/friendBattle/remoteFriend.tsx
 import ChessBoard from '@/components/ChessBoard';
 import GeneralButton from '@/components/GeneralButton';
-import { useRef, useState } from 'react';
+import { useChessStore } from '@/stores/useChessStore';
+import { useEffect, useRef, useState } from 'react';
 import { Alert, StyleSheet, Text, TextInput, View } from 'react-native';
 
 
@@ -64,6 +65,10 @@ export default function RemoteFriendGame() {
     console.log('执行了onLocalMove，发送给服务器的 move 消息：', move);
   };
 
+
+  useEffect(() => {
+    useChessStore.getState().resetGame();
+  }, []);
 
   return (
     <View style={styles.container}>
