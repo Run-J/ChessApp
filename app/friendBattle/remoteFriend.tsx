@@ -60,7 +60,10 @@ export default function RemoteFriendGame() {
   // 好友匹配模式下，本地自己走棋时通知服务器
   const handleLocalMove = (move: string) => {
     ws.current?.send(JSON.stringify({ type: 'move', roomId, payload: move }));
+    
+    console.log('执行了onLocalMove，发送给服务器的 move 消息：', move);
   };
+
 
   return (
     <View style={styles.container}>
