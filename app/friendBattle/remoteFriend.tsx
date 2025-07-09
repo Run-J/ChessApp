@@ -46,14 +46,11 @@ export default function RemoteFriendGame() {
       const msg = JSON.parse(event.data);
       if (msg.type === 'joined') {
         setConnected(true);
-      } else if (msg.type === 'error') {
-        Alert.alert('错误', msg.message);
-      } else if (msg.type === 'joined') {
-        setConnected(true);
         setPlayerColor(msg.color); // 记录玩家颜色
         console.log (`收到来自服务器分配的角色:`, msg.color);
-      }
-
+      } else if (msg.type === 'error') {
+        Alert.alert('错误', msg.message);
+      } 
     };
 
     ws.current.onerror = () => {

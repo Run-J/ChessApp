@@ -23,6 +23,7 @@ export default function ChessBoard({ getOpponentMove, onLocalMove, shouldWait }:
     
     useEffect(() => {
       if (shouldWait && getOpponentMove) {
+        console.log(`当前的身份:`, shouldWait);
         // 好友匹配时如果我方身份为黑方：加载时就等待白方先手
         getOpponentMove(fen).then((opponentMove) => {
           if (!opponentMove) return;
