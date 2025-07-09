@@ -35,8 +35,8 @@ export default function RootLayout() {
         <Stack.Screen 
           name="aiBattle/aiGame"
           options={{
-            title: "智能对战",
-            headerBackTitle: "调整难度",
+            title: "对战中...",
+            headerBackTitle: "退出",
             headerStyle: {
               backgroundColor: '#1e1e2e',  // 背景色
             },

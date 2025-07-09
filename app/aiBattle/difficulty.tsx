@@ -20,7 +20,7 @@ export default function DifficultyScreen() {
   const handleSelect = (level: number) => {
     router.push({
       pathname: '/aiBattle/aiGame',
-      params: { level: level.toString() },
+      params: { level: level.toString(), source: 'ai' },
     });
   };
 

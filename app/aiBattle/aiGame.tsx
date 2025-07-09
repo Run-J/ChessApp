@@ -6,7 +6,7 @@ import { Alert, StyleSheet, Text, View } from 'react-native';
 
 
 export default function AiGameScreen() {
-  const { level } = useLocalSearchParams<{ level: string }>();
+  const { level, source } = useLocalSearchParams<{ level: string, source?: string }>();
 
   const resetGame = useChessStore((state) => state.resetGame);
 
@@ -33,7 +33,12 @@ export default function AiGameScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>AI 难度：{level}</Text>
+     {source === 'ai' && (
+        <>
+             <Text style={styles.title}>智能对战</Text>
+             <Text style={styles.subtitle}>AI 难度：{level}</Text>
+        </>
+     )}
 
       <ChessBoard getOpponentMove={fetchBestMove} />
 
@@ -60,6 +65,11 @@ const styles = StyleSheet.create({
     color: '#00d9ff',
     marginBottom: 16,
     fontWeight: 'bold',
+  },
+  subtitle: {
+    fontSize: 16,
+    color: '#aaa',
+    marginBottom: 16,
   },
   button: {
     marginTop: 40,

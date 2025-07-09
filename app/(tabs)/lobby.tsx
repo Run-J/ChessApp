@@ -19,7 +19,7 @@ export default function LobbyTabScreen() {
           <TouchableOpacity
             style={styles.card}
             disabled={item.status !== '空闲'}
-            onPress={() => router.push(`/aiBattle/aiGame?level=${item.level}`)}
+            onPress={() => router.push(`/aiBattle/aiGame?level=${item.level}&source=lobby`)}
           >
             <Text style={styles.avatar}>{item.avatar}</Text>
             <View>
