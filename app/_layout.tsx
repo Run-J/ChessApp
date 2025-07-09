@@ -48,6 +48,23 @@ export default function RootLayout() {
           }}
         />
 
+        <Stack.Screen 
+          name="friendBattle/localFriend"
+          options={{
+            title: "本地对战中...",
+            headerBackTitle: "返回",
+            headerStyle: {
+              backgroundColor: '#1e1e2e',
+            },
+            headerTintColor: '#ffd33d',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+              fontSize: 20,
+            },
+          }}
+        />
+
+
         <Stack.Screen
           name="+not-found"
           options={{
