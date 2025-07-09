@@ -4,10 +4,11 @@ import { Alert, StyleSheet, Text, View } from 'react-native';
 import Chessboard from 'react-native-chessboard'; // UI 上显示棋盘，响应用户点击
 
 interface ChessBoardProps {
-  getOpponentMove?: (fen: string) => Promise<string | null>; // 对手走法逻辑（AI、玩家、或null）
+  getOpponentMove?: (fen: string) => Promise<string | null>; // 对手走法逻辑（AI、玩家、或null
+  onLocalMove?: (move: string) => void; // 本地走棋后发送通知（给 WebSocket)
 }
 
-export default function ChessBoard({ getOpponentMove }: ChessBoardProps) {
+export default function ChessBoard({ getOpponentMove, onLocalMove }: ChessBoardProps) {
     const fen = useChessStore((state) => state.fen);
     const makeMove = useChessStore((state) => state.makeMove);
     const gameStatus = useChessStore((state) => state.game);
@@ -56,6 +57,11 @@ export default function ChessBoard({ getOpponentMove }: ChessBoardProps) {
     if (!success) {
       Alert.alert('走定和ChessStore维持的棋盘状态不一致');
       return;
+    }
+
+    if (onLocalMove) {
+      const moveStr = from + to + (promotion ?? '');
+      onLocalMove(moveStr);
     }
 
     // 获取新的 FEN（ 刚才本方玩家走完之后的棋局 ）
