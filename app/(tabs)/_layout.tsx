@@ -32,7 +32,7 @@ export default function TabsLayout() {
         }}
       />
       <Tabs.Screen
-        name="multiplayer"
+        name="lobby"
         options={{
           title: '大厅',
           tabBarIcon: ({ focused, color }) => (
