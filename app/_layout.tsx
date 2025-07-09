@@ -64,6 +64,22 @@ export default function RootLayout() {
           }}
         />
 
+        <Stack.Screen 
+          name="friendBattle/remoteFriend"
+          options={{
+            title: "加入棋局",
+            headerBackTitle: "返回",
+            headerStyle: {
+              backgroundColor: '#1e1e2e',
+            },
+            headerTintColor: '#ffd33d',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+              fontSize: 20,
+            },
+          }}
+        />
+
 
         <Stack.Screen
           name="+not-found"

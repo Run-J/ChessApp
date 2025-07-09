@@ -1,6 +1,6 @@
 // components/ChessBoard.tsx
 import { useChessStore } from '@/stores/useChessStore';
-import { Alert, Platform, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
+import { Alert, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import Chessboard from 'react-native-chessboard'; // UI 上显示棋盘，响应用户点击
 
 interface ChessBoardProps {
@@ -16,8 +16,7 @@ export default function ChessBoard({ getOpponentMove, onLocalMove }: ChessBoardP
     const moves = useChessStore((state) => state.moves);
 
     const { width } = useWindowDimensions();
-    const boardSize = Platform.OS === 'web' ? Math.min(width - 40, 480) : 320;
-
+    const boardSize = Math.min(width - 5, 480);
 
 
     // 推导对局状态信息文字；反馈给玩家当前棋局状态
