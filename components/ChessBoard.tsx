@@ -1,6 +1,6 @@
 // components/ChessBoard.tsx
 import { useChessStore } from '@/stores/useChessStore';
-import { Alert, StyleSheet, View } from 'react-native';
+import { Alert, StyleSheet, Text, View } from 'react-native';
 import Chessboard from 'react-native-chessboard'; // UI 上显示棋盘，响应用户点击
 
 interface ChessBoardProps {
@@ -10,6 +10,29 @@ interface ChessBoardProps {
 export default function ChessBoard({ getOpponentMove }: ChessBoardProps) {
     const fen = useChessStore((state) => state.fen);
     const makeMove = useChessStore((state) => state.makeMove);
+    const gameStatus = useChessStore((state) => state.game);
+    const turn = useChessStore((state) => state.turn);
+
+    let statusText = ''; // 反馈给玩家当前棋局状态
+
+    if (gameStatus.isGameOver()) {
+      if (gameStatus.isCheckmate()) {
+        statusText = turn === 'w' ? '黑方胜利（将死）' : '白方胜利（将死）';
+      } else if (gameStatus.isStalemate()) {
+        statusText = '和棋（无子可动）';
+      } else if (gameStatus.isThreefoldRepetition()) {
+        statusText = '和棋（三次重复局面）';
+      } else if (gameStatus.isInsufficientMaterial()) {
+        statusText = '和棋（棋力不足）';
+      } else {
+        statusText = '棋局已结束';
+      }
+    } else if (gameStatus.inCheck()) {
+      statusText = turn === 'w' ? '白方被将军！' : '黑方被将军！';
+    } else {
+      statusText = turn === 'w' ? '轮到白方走棋' : '轮到黑方走棋';
+    }
+
 
 
   // 当用户成功移动了棋盘上的棋子
@@ -59,6 +82,7 @@ export default function ChessBoard({ getOpponentMove }: ChessBoardProps) {
 
   return (
     <View style={styles.container}>
+      <Text style={styles.statusText}>{statusText}</Text>
       <Chessboard 
         key={fen}
         fen={fen} // 显示当前棋盘状态 来自store
@@ -74,4 +98,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  statusText: {
+    color: '#ffffff',
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 12,
+  },
+
 });
