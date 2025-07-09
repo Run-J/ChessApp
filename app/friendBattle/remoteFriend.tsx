@@ -90,6 +90,25 @@ export default function RemoteFriendGame() {
             getOpponentMove={waitForOpponentMove}
             onLocalMove={handleLocalMove}
           />
+          <GeneralButton
+            title="退出房间"
+            onPress={() => {
+                // 1. 通知服务器退出
+                if (ws.current?.readyState === WebSocket.OPEN) {
+                ws.current.send(JSON.stringify({ type: 'leave', roomId }));
+                }
+
+                // 2. 关闭 WebSocket 连接
+                ws.current?.close();
+
+                // 3. 重置本地状态
+                setConnected(false);
+                setRoomId('');
+                useChessStore.getState().resetGame();
+            }}
+            style={{ marginTop: 20 }}
+          />
+
         </>
       )}
     </View>
