@@ -10,6 +10,8 @@ export default function RemoteFriendGame() {
   const [roomId, setRoomId] = useState('');
   const [connected, setConnected] = useState(false);
   const ws = useRef<WebSocket | null>(null);
+  const [playerColor, setPlayerColor] = useState<'w' | 'b' | null>(null);
+
 
   // 接收对手走法
   const waitForOpponentMove = (): Promise<string> => {
@@ -46,7 +48,12 @@ export default function RemoteFriendGame() {
         setConnected(true);
       } else if (msg.type === 'error') {
         Alert.alert('错误', msg.message);
+      } else if (msg.type === 'joined') {
+        setConnected(true);
+        setPlayerColor(msg.color); // 记录玩家颜色
+        console.log (`收到来自服务器分配的角色:`, msg.color);
       }
+
     };
 
     ws.current.onerror = () => {
@@ -62,7 +69,7 @@ export default function RemoteFriendGame() {
   const handleLocalMove = (move: string) => {
     ws.current?.send(JSON.stringify({ type: 'move', roomId, payload: move }));
     
-    console.log('执行了onLocalMove，发送给服务器的 move 消息：', move);
+    console.log('执行了onLocalMove, 发送给服务器的 move 消息：', move);
   };
 
 
@@ -89,6 +96,7 @@ export default function RemoteFriendGame() {
           <ChessBoard
             getOpponentMove={waitForOpponentMove}
             onLocalMove={handleLocalMove}
+            shouldWait={playerColor === 'b'} // 如果是黑棋，先等白棋对手先下
           />
           <GeneralButton
             title="退出房间"

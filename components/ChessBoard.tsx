@@ -1,14 +1,16 @@
 // components/ChessBoard.tsx
 import { useChessStore } from '@/stores/useChessStore';
+import { useEffect } from 'react';
 import { Alert, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import Chessboard from 'react-native-chessboard'; // UI 上显示棋盘，响应用户点击
 
 interface ChessBoardProps {
   getOpponentMove?: (fen: string) => Promise<string | null>; // 对手走法逻辑（AI、玩家、或null
   onLocalMove?: (move: string) => void; // 本地走棋后发送通知（给 WebSocket)
+  shouldWait?: boolean;
 }
 
-export default function ChessBoard({ getOpponentMove, onLocalMove }: ChessBoardProps) {
+export default function ChessBoard({ getOpponentMove, onLocalMove, shouldWait }: ChessBoardProps) {
     const fen = useChessStore((state) => state.fen);
     const makeMove = useChessStore((state) => state.makeMove);
     const gameStatus = useChessStore((state) => state.game);
@@ -17,6 +19,24 @@ export default function ChessBoard({ getOpponentMove, onLocalMove }: ChessBoardP
 
     const { width } = useWindowDimensions();
     const boardSize = Math.min(width - 5, 480);
+
+    
+    useEffect(() => {
+      if (shouldWait && getOpponentMove) {
+        // 好友匹配时如果我方身份为黑方：加载时就等待白方先手
+        getOpponentMove(fen).then((opponentMove) => {
+          if (!opponentMove) return;
+          const from = opponentMove.slice(0, 2);
+          const to = opponentMove.slice(2, 4);
+          const promotion = opponentMove.length === 5 ? opponentMove[4] as 'q' | 'r' | 'b' | 'n' : undefined;
+          const success = makeMove({ from, to, promotion });
+          if (!success) {
+            console.warn('黑方初始接受走法失败');
+          }
+        });
+      }
+    }, []);
+
 
 
     // 推导对局状态信息文字；反馈给玩家当前棋局状态
