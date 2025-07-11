@@ -12,7 +12,12 @@ export default function AiGameScreen() {
   const resetGame = useChessStore((state) => state.resetGame);
 
   // 提供给 ChessBoard 的 AI 响应函数
-  const fetchBestMove = async (fen: string): Promise<string | null> => {
+  const fetchBestMove = async (fen: string): Promise<{
+    from: string;
+    to: string;
+    promotion?: 'q' | 'r' | 'b' | 'n';
+    newFen?: string;
+  } | null> => {
     try {
       const res = await fetch('http://192.168.1.30:3001/best-move', {
         method: 'POST',
@@ -23,7 +28,18 @@ export default function AiGameScreen() {
       const data = await res.json();
       console.log("AI best move response:", data);
 
-      return data.move; // 例如 "e2e4"
+      if (!data.move || data.move.length < 4) return null;
+
+      const from = data.move.slice(0, 2); // e.g. "e2"
+      const to = data.move.slice(2, 4);   // e.g. "e4"
+      const promotion = data.move.length === 5 ? data.move[4] : undefined;
+
+      return {
+        from,
+        to,
+        promotion,
+        newFen: data.newFen ?? undefined, // 可选字段
+      };
 
     } catch (error) {
       console.error('AI move fetch failed:', error);

@@ -5,10 +5,17 @@ import { Alert, StyleSheet, Text, useWindowDimensions, View } from 'react-native
 import Chessboard from 'react-native-chessboard'; // UI 上显示棋盘，响应用户点击
 
 interface ChessBoardProps {
-  getOpponentMove?: (fen: string) => Promise<string | null>; // 对手走法逻辑（AI、玩家、或null
-  onLocalMove?: (move: string) => void; // 本地走棋后发送通知（给 WebSocket)
+  getOpponentMove?: (fen: string) => Promise<{  // 对手走法逻辑（AI、玩家、或null)
+    from: string;
+    to: string;
+    promotion?: 'q' | 'r' | 'b' | 'n';
+    newFen?: string;
+  } | null>;
+
+  onLocalMove?: (from: string, to: string, newFen: string) => void; // 本地走棋后发送通知（给 WebSocket)
   shouldWait?: boolean;
 }
+
 
 export default function ChessBoard({ getOpponentMove, onLocalMove, shouldWait }: ChessBoardProps) {
     const fen = useChessStore((state) => state.fen);
@@ -27,14 +34,21 @@ export default function ChessBoard({ getOpponentMove, onLocalMove, shouldWait }:
         // 好友匹配时如果我方身份为黑方：加载时就等待白方先手
         getOpponentMove(fen).then((opponentMove) => {
           if (!opponentMove) return;
-          const from = opponentMove.slice(0, 2);
-          const to = opponentMove.slice(2, 4);
-          const promotion = opponentMove.length === 5 ? opponentMove[4] as 'q' | 'r' | 'b' | 'n' : undefined;
+          const from = opponentMove.from;
+          const to = opponentMove.to;
+          const promotion = opponentMove.promotion;
+          const newFen = opponentMove.newFen;
           const success = makeMove({ from, to, promotion });
           if (!success) {
             console.warn('黑方初始接受走法失败');
           }
         });
+      }
+
+      if (shouldWait) {
+        Alert.alert('我方为黑，请等待对手先走棋');
+      } else {
+        Alert.alert('我方为白，请先走棋');
       }
     }, []);
 
@@ -83,9 +97,8 @@ export default function ChessBoard({ getOpponentMove, onLocalMove, shouldWait }:
       return;
     }
 
-    if (onLocalMove) {
-      const moveStr = from + to + (promotion ?? '');
-      onLocalMove(moveStr);
+    if (onLocalMove) { // onLocalMove 函数暂时是专门给好友远程匹配模式提供，用于发送我方走定状态给服务器。
+      onLocalMove(from, to, info?.fen);
     }
 
     // 获取新的 FEN（ 刚才本方玩家走完之后的棋局 ）
@@ -96,18 +109,23 @@ export default function ChessBoard({ getOpponentMove, onLocalMove, shouldWait }:
     if (!getOpponentMove) return;
 
     // 获取 AI/对手玩家 的走法
-    const opponentMove = await getOpponentMove(newFen);
-    if (!opponentMove) return;
+    const opponentMoveObj = await getOpponentMove(newFen); // 传入的newFen用于给AI模式用的，好友匹配暂时用不到。
+    if (!opponentMoveObj) return;
 
     // 解析 AI/对手玩家 走法
-    const oppFrom = opponentMove.substring(0, 2);
-    const oppTo = opponentMove.substring(2, 4);
-    const oppPromotion = opponentMove.length === 5 ? opponentMove[4] as 'q' | 'r' | 'b' | 'n' : undefined;
+    const { from: opponentFrom, to: opponentTo, promotion: opponentPromotion, newFen: confirmedFen } = opponentMoveObj;
+    const oppSuccess = makeMove({ from: opponentFrom, to: opponentTo, promotion: opponentPromotion });
 
-    const oppSuccess = makeMove({ from: oppFrom, to: oppTo, promotion: oppPromotion }); // 同步下棋我们ChessStore里维持的棋盘
+
     if (!oppSuccess) {
-      console.warn("对手走棋失败/错误; 与ChessStore维持的棋盘状态不符");
+      console.warn("对手走棋失败，棋盘状态不同步");
     }
+
+    // 如果有confirmedFen，则意味着这是好友远程匹配模式，需要强制把本地的 FEN 同步成服务器上的 FEN
+    if (confirmedFen) {
+      useChessStore.getState().setFen(confirmedFen);
+    }
+
 
     console.log('Fen after AI/OpponentPlayer move:', useChessStore.getState().fen);
     console.log(useChessStore.getState().game.ascii());

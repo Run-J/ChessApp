@@ -14,20 +14,28 @@ export default function RemoteFriendGame() {
 
 
   // 接收对手走法
-  const waitForOpponentMove = (): Promise<string> => {
+  const waitForOpponentMove = (): Promise<{
+    from: string;
+    to: string;
+    promotion?: 'q' | 'r' | 'b' | 'n';
+    newFen: string;
+  }> => {
     return new Promise((resolve) => {
-
       const handler = (event: MessageEvent) => {
         const data = JSON.parse(event.data);
         if (data.type === 'opponentMove') {
           ws.current?.removeEventListener('message', handler);
-          resolve(data.payload);
+          resolve({
+            from: data.payload.from,
+            to: data.payload.to,
+            newFen: data.payload.newFen,
+          });
         }
       };
-
       ws.current?.addEventListener('message', handler);
     });
   };
+
 
   // 点击加入房间按钮时调用
   const handleJoin = () => {
@@ -40,6 +48,7 @@ export default function RemoteFriendGame() {
 
     ws.current.onopen = () => {
       ws.current?.send(JSON.stringify({ type: 'join', roomId }));
+      Alert.alert('成功加入房间:', roomId);
     };
 
     ws.current.onmessage = (event) => {
@@ -47,6 +56,7 @@ export default function RemoteFriendGame() {
       if (msg.type === 'joined') {
         setConnected(true);
         setPlayerColor(msg.color); // 记录玩家颜色
+        useChessStore.getState().setFen(msg.fen); // 获取服务器记录的当前房间的棋局
         console.log (`收到来自服务器分配的角色:`, msg.color);
       } else if (msg.type === 'error') {
         Alert.alert('错误', msg.message);
@@ -58,15 +68,15 @@ export default function RemoteFriendGame() {
     };
 
     ws.current.onclose = () => {
-      Alert.alert('连接已断开');
+      Alert.alert('已离开房间:', `${roomId} 棋局`); // alert 接受两个参数，第一个是弹窗的title，第二个是弹窗的message
     };
   };
 
   // 好友匹配模式下，本地自己走棋时通知服务器
-  const handleLocalMove = (move: string) => {
-    ws.current?.send(JSON.stringify({ type: 'move', roomId, payload: move }));
+  const handleLocalMove = (from: string, to: string, newFen: string) => {
+    ws.current?.send(JSON.stringify({ type: 'move', roomId, payload: { from, to, newFen }}));
     
-    console.log('执行了onLocalMove, 发送给服务器的 move 消息：', move);
+    console.log('执行了onLocalMove, 发送给服务器的 move 消息：', 'from:', from, 'to:', to, 'newFen:', newFen);
   };
 
 

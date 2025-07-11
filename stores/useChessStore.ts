@@ -14,6 +14,7 @@ interface ChessState {
     moves: Move[];
     makeMove: (move: Move) => boolean;
     resetGame: () => void;
+    setFen: (newFen: string) => void;
 }
 
 export const useChessStore = create<ChessState>((set, get) => ({
@@ -51,4 +52,7 @@ export const useChessStore = create<ChessState>((set, get) => ({
             moves: [],
         });
     },
+    setFen: (newFen: string) => {
+        set({fen: newFen});
+    }
 }));
