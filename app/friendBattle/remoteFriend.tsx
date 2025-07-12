@@ -11,6 +11,7 @@ export default function RemoteFriendGame() {
   const [connected, setConnected] = useState(false);
   const ws = useRef<WebSocket | null>(null);
   const [playerColor, setPlayerColor] = useState<'w' | 'b' | null>(null);
+  const [thinking, setThinking] = useState(false);
 
 
   // 接收对手走法
@@ -21,10 +22,14 @@ export default function RemoteFriendGame() {
     newFen: string;
   }> => {
     return new Promise((resolve) => {
+      setThinking(true); // 👈 开始显示“思考中...”
+
       const handler = (event: MessageEvent) => {
         const data = JSON.parse(event.data);
         if (data.type === 'opponentMove') {
           ws.current?.removeEventListener('message', handler);
+          setThinking(false); // 👈 收到对手走法，停止显示
+
           resolve({
             from: data.payload.from,
             to: data.payload.to,
@@ -32,6 +37,7 @@ export default function RemoteFriendGame() {
           });
         }
       };
+
       ws.current?.addEventListener('message', handler);
     });
   };
@@ -105,6 +111,7 @@ export default function RemoteFriendGame() {
             getOpponentMove={waitForOpponentMove}
             onLocalMove={handleLocalMove}
             shouldWait={playerColor === 'b'} // 如果是黑棋，先等白棋对手先下
+            thinking={thinking}
           />
           <GeneralButton
             title="退出房间"

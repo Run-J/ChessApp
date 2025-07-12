@@ -21,7 +21,7 @@ export default function AiGameScreen() {
   } | null> => {
     try {
 
-      setThinking(true); // ➕ 开始思考图标指示
+      setThinking(true); // 如果是 AI 对战模式，则 ➕ 开始思考图标指示；如果是 大厅假人，则不加
 
       const res = await fetch('http://45.32.51.54:3001/best-move', {
         method: 'POST',

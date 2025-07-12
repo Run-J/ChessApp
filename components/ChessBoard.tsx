@@ -152,7 +152,7 @@ export default function ChessBoard({ getOpponentMove, onLocalMove, shouldWait, t
       {thinking && (
         <View style={styles.overlay}>
           <ActivityIndicator size="large" color="#ffffff" />
-          <Text style={{ color: '#fff', marginTop: 10 }}>AI 正在思考中...</Text>
+          <Text style={{ color: '#fff', marginTop: 10 }}>对手正在思考中...请耐心等待⌛️</Text>
         </View>
       )}
 
