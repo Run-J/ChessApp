@@ -2,11 +2,16 @@
 import ChessBoard from '@/components/ChessBoard';
 import GeneralButton from '@/components/GeneralButton';
 import { useChessStore } from '@/stores/useChessStore';
+import { useEffect } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
 export default function LocalFriendBattleScreen() {
   const resetGame = useChessStore((state) => state.resetGame);
 
+  useEffect(() => {
+    useChessStore.getState().resetGame();
+  }, []);
+  
   return (
     <View style={styles.container}>
       <Text style={styles.title}>🎮 本地双人对战</Text>

@@ -98,7 +98,9 @@ export default function ChessBoard({ getOpponentMove, onLocalMove, shouldWait }:
     }
 
     if (onLocalMove) { // onLocalMove 函数暂时是专门给好友远程匹配模式提供，用于发送我方走定状态给服务器。
-      onLocalMove(from, to, info?.fen);
+      const newFen = useChessStore.getState().fen;
+      console.log('客户端发给服务器的当前棋局fen为：', newFen);
+      onLocalMove(from, to, newFen);
     }
 
     // 获取新的 FEN（ 刚才本方玩家走完之后的棋局 ）

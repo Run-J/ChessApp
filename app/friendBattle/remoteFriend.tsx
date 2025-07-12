@@ -57,6 +57,7 @@ export default function RemoteFriendGame() {
         setConnected(true);
         setPlayerColor(msg.color); // 记录玩家颜色
         useChessStore.getState().setFen(msg.fen); // 获取服务器记录的当前房间的棋局
+        console.log('接收到服务端当前棋局的 fen:', msg.fen);
         console.log (`收到来自服务器分配的角色:`, msg.color);
       } else if (msg.type === 'error') {
         Alert.alert('错误', msg.message);
