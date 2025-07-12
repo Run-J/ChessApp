@@ -2,12 +2,13 @@ import ChessBoard from '@/components/ChessBoard';
 import GeneralButton from '@/components/GeneralButton';
 import { useChessStore } from '@/stores/useChessStore';
 import { useLocalSearchParams } from 'expo-router';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Alert, StyleSheet, Text, View } from 'react-native';
 
 
 export default function AiGameScreen() {
   const { level, source } = useLocalSearchParams<{ level: string, source?: string }>();
+  const [thinking, setThinking] = useState(false);
 
   const resetGame = useChessStore((state) => state.resetGame);
 
@@ -19,13 +20,17 @@ export default function AiGameScreen() {
     newFen?: string;
   } | null> => {
     try {
-      const res = await fetch('http://192.168.1.30:3001/best-move', {
+
+      setThinking(true); // ➕ 开始思考图标指示
+
+      const res = await fetch('http://45.32.51.54:3001/best-move', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ fen, level }),
       });
 
       const data = await res.json();
+      if (!data.move) throw new Error('No move returned');
       console.log("AI best move response:", data);
 
       if (!data.move || data.move.length < 4) return null;
@@ -38,13 +43,14 @@ export default function AiGameScreen() {
         from,
         to,
         promotion,
-        newFen: data.newFen ?? undefined, // 可选字段
       };
 
     } catch (error) {
       console.error('AI move fetch failed:', error);
       Alert.alert("AI 请求失败", "无法获取 AI 走法，请检查网络或服务状态。");
       return null;
+    } finally {
+      setThinking(false);
     }
   };
 
@@ -62,7 +68,7 @@ export default function AiGameScreen() {
         </>
      )}
 
-      <ChessBoard getOpponentMove={fetchBestMove} />
+      <ChessBoard getOpponentMove={fetchBestMove} thinking={thinking}/>
 
       <GeneralButton 
         title="🔄 重新开始对局"

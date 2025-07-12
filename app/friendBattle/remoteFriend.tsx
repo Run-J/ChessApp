@@ -44,7 +44,7 @@ export default function RemoteFriendGame() {
       return;
     }
 
-    ws.current = new WebSocket('ws://192.168.1.30:3001');
+    ws.current = new WebSocket('ws://45.32.51.54:3001');
 
     ws.current.onopen = () => {
       ws.current?.send(JSON.stringify({ type: 'join', roomId }));

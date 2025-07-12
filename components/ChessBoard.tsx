@@ -1,7 +1,7 @@
 // components/ChessBoard.tsx
 import { useChessStore } from '@/stores/useChessStore';
 import { useEffect } from 'react';
-import { Alert, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
+import { ActivityIndicator, Alert, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import Chessboard from 'react-native-chessboard'; // UI 上显示棋盘，响应用户点击
 
 interface ChessBoardProps {
@@ -14,10 +14,11 @@ interface ChessBoardProps {
 
   onLocalMove?: (from: string, to: string, newFen: string) => void; // 本地走棋后发送通知（给 WebSocket)
   shouldWait?: boolean;
+  thinking?: boolean;
 }
 
 
-export default function ChessBoard({ getOpponentMove, onLocalMove, shouldWait }: ChessBoardProps) {
+export default function ChessBoard({ getOpponentMove, onLocalMove, shouldWait, thinking }: ChessBoardProps) {
     const fen = useChessStore((state) => state.fen);
     const makeMove = useChessStore((state) => state.makeMove);
     const gameStatus = useChessStore((state) => state.game);
@@ -148,6 +149,14 @@ export default function ChessBoard({ getOpponentMove, onLocalMove, shouldWait }:
         boardSize={boardSize}
       />
 
+      {thinking && (
+        <View style={styles.overlay}>
+          <ActivityIndicator size="large" color="#ffffff" />
+          <Text style={{ color: '#fff', marginTop: 10 }}>AI 正在思考中...</Text>
+        </View>
+      )}
+
+
     </View>
   );
 }
@@ -174,4 +183,15 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginBottom: 2,
   },
+  overlay: {
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  backgroundColor: 'rgba(0,0,0,0.4)',
+  justifyContent: 'center',
+  alignItems: 'center',
+  zIndex: 10,
+},
 });
