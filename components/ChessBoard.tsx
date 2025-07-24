@@ -41,15 +41,15 @@ export default function ChessBoard({ getOpponentMove, onLocalMove, shouldWait, t
           const newFen = opponentMove.newFen;
           const success = makeMove({ from, to, promotion });
           if (!success) {
-            console.warn('黑方初始接受走法失败');
+            console.warn('Initial black move failed to apply');
           }
         });
       }
 
       if (shouldWait) {
-        Alert.alert('我方为黑，请等待对手先走棋');
+        Alert.alert('You are Black', 'Waiting for opponent to move first');
       } else {
-        Alert.alert('我方为白，请先走棋');
+        Alert.alert('You are White', 'Make your first move');
       }
     }, []);
 
@@ -60,20 +60,20 @@ export default function ChessBoard({ getOpponentMove, onLocalMove, shouldWait, t
 
     if (gameStatus.isGameOver()) {
       if (gameStatus.isCheckmate()) {
-        statusText = turn === 'w' ? '黑方胜利（将死）' : '白方胜利（将死）';
+        statusText = turn === 'w' ? 'Black wins (checkmate)' : 'White wins (checkmate)';
       } else if (gameStatus.isStalemate()) {
-        statusText = '和棋（无子可动）';
+        statusText = 'Draw (stalemate)';
       } else if (gameStatus.isThreefoldRepetition()) {
-        statusText = '和棋（三次重复局面）';
+        statusText = 'Draw (threefold repetition)';
       } else if (gameStatus.isInsufficientMaterial()) {
-        statusText = '和棋（棋力不足）';
+        statusText = 'Draw (insufficient material)';
       } else {
-        statusText = '棋局已结束';
+        statusText = 'Game over';
       }
     } else if (gameStatus.inCheck()) {
-      statusText = turn === 'w' ? '白方被将军！' : '黑方被将军！';
+      statusText = turn === 'w' ? 'White is in check!' : 'Black is in check!';
     } else {
-      statusText = turn === 'w' ? '轮到白方走棋' : '轮到黑方走棋';
+      statusText = turn === 'w' ? "White's turn" : "Black's turn";
   }
 
 
@@ -94,7 +94,7 @@ export default function ChessBoard({ getOpponentMove, onLocalMove, shouldWait, t
 
     const success = makeMove({ from, to, promotion }); // 同步下棋我们ChessStore里维持的棋盘
     if (!success) {
-      Alert.alert('走定和ChessStore维持的棋盘状态不一致');
+      Alert.alert('Move failed', 'Move could not be applied to game state');
       return;
     }
 
@@ -139,7 +139,7 @@ export default function ChessBoard({ getOpponentMove, onLocalMove, shouldWait, t
 
       <View style={styles.infoBox}>
         <Text style={styles.statusText}>🎯 {statusText}</Text>
-        <Text style={styles.metaText}>🔁 回合数：{Math.ceil(moves.length / 2)}</Text>
+        <Text style={styles.metaText}>🔁 Turn: {Math.ceil(moves.length / 2)}</Text>
       </View>
 
       <Chessboard 
@@ -152,7 +152,7 @@ export default function ChessBoard({ getOpponentMove, onLocalMove, shouldWait, t
       {thinking && (
         <View style={styles.overlay}>
           <ActivityIndicator size="large" color="#ffffff" />
-          <Text style={{ color: '#fff', marginTop: 10 }}>对手正在思考中...请耐心等待⌛️</Text>
+          <Text style={{ color: '#fff', marginTop: 10 }}>Opponent is thinking... please wait ⌛️</Text>
         </View>
       )}
 

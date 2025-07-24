@@ -7,11 +7,11 @@ export default function AiTabScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>🤖 AI 对战</Text>
-      <Text style={styles.subtitle}>挑战来自未来的智能对手</Text>
+      <Text style={styles.title}>🤖 AI Battle</Text>
+      <Text style={styles.subtitle}>Face a futuristic AI</Text>
 
       <GeneralButton
-        title="开始 AI 对战"
+        title="Start AI Battle"
         onPress={() => router.push('/aiBattle/difficulty')}
         style={styles.button}
         textStyle={styles.buttonText}

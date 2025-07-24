@@ -47,7 +47,7 @@ export default function AiGameScreen() {
 
     } catch (error) {
       console.error('AI move fetch failed:', error);
-      Alert.alert("AI 请求失败", "无法获取 AI 走法，请检查网络或服务状态。");
+      Alert.alert("AI Request Failed", "Unable to fetch AI move. Please check your network or server.");
       return null;
     } finally {
       setThinking(false);
@@ -63,15 +63,15 @@ export default function AiGameScreen() {
     <View style={styles.container}>
      {source === 'ai' && (
         <>
-             <Text style={styles.title}>智能对战</Text>
-             <Text style={styles.subtitle}>AI 难度：{level}</Text>
+             <Text style={styles.title}>AI Battle</Text>
+             <Text style={styles.subtitle}>Difficulty Level: {level}</Text>
         </>
      )}
 
       <ChessBoard getOpponentMove={fetchBestMove} thinking={thinking}/>
 
       <GeneralButton 
-        title="🔄 重新开始对局"
+        title="🔄 Restart Match"
         onPress={resetGame}
         style={styles.button}
         textStyle={styles.buttonText}

@@ -16,7 +16,7 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: '主页',
+          title: 'Home',
           tabBarIcon: ({ focused, color }) => (
             <Ionicons name={focused ? 'home' : 'home-outline'} size={24} color={color} />
           ),
@@ -25,7 +25,7 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="ai"
         options={{
-          title: 'AI对战',
+          title: 'AI Battle',
           tabBarIcon: ({ focused, color }) => (
             <Ionicons name={focused ? 'flash' : 'flash-outline'} size={24} color={color} />
           ),
@@ -34,7 +34,7 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="lobby"
         options={{
-          title: '大厅',
+          title: 'Lobby',
           tabBarIcon: ({ focused, color }) => (
             <Ionicons name={focused ? 'people' : 'people-outline'} size={24} color={color} />
           ),
@@ -43,7 +43,7 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="friends"
         options={{
-          title: '好友',
+          title: 'Friends',
           tabBarIcon: ({ focused, color }) => (
             <Ionicons name={focused ? 'person' : 'person-outline'} size={24} color={color} />
           ),

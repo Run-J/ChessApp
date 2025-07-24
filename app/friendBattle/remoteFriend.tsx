@@ -46,7 +46,7 @@ export default function RemoteFriendGame() {
   // 点击加入房间按钮时调用
   const handleJoin = () => {
     if (!roomId.trim()) {
-      Alert.alert('请输入房间号');
+      Alert.alert('Room ID Required', 'Please enter a room ID.');
       return;
     }
 
@@ -54,7 +54,7 @@ export default function RemoteFriendGame() {
 
     ws.current.onopen = () => {
       ws.current?.send(JSON.stringify({ type: 'join', roomId }));
-      Alert.alert('成功加入房间:', roomId);
+      Alert.alert('Joined Room', `You have joined room: ${roomId}`);
     };
 
     ws.current.onmessage = (event) => {
@@ -66,16 +66,16 @@ export default function RemoteFriendGame() {
         console.log('接收到服务端当前棋局的 fen:', msg.fen);
         console.log (`收到来自服务器分配的角色:`, msg.color);
       } else if (msg.type === 'error') {
-        Alert.alert('错误', msg.message);
+        Alert.alert('Error', msg.message);
       } 
     };
 
     ws.current.onerror = () => {
-      Alert.alert('连接失败', '无法连接服务器');
+      Alert.alert('Connection Failed', 'Unable to connect to the server.');
     };
 
     ws.current.onclose = () => {
-      Alert.alert('已离开房间:', `${roomId} 棋局`); // alert 接受两个参数，第一个是弹窗的title，第二个是弹窗的message
+      Alert.alert('Left Room', `You have left the game: ${roomId}`); // alert 接受两个参数，第一个是弹窗的title，第二个是弹窗的message
     };
   };
 
@@ -95,18 +95,18 @@ export default function RemoteFriendGame() {
     <View style={styles.container}>
       {!connected ? (
         <>
-          <Text style={styles.title}>远程对战</Text>
+          <Text style={styles.title}>Online Match</Text>
           <TextInput
-            placeholder="请输入房间号"
+            placeholder="Enter Room ID"
             value={roomId}
             onChangeText={setRoomId}
             style={styles.input}
           />
-          <GeneralButton title="加入房间" onPress={handleJoin} />
+          <GeneralButton title="Join Room" onPress={handleJoin} />
         </>
       ) : (
         <>
-          <Text style={styles.subtitle}>已加入房间：{roomId}</Text>
+          <Text style={styles.subtitle}>Joined Room: {roomId}</Text>
           <ChessBoard
             getOpponentMove={waitForOpponentMove}
             onLocalMove={handleLocalMove}

@@ -14,15 +14,15 @@ export default function LocalFriendBattleScreen() {
   
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>🎮 本地双人对战</Text>
-      <Text style={styles.subtitle}>你们可以轮流点击走子，共用一台设备</Text>
+      <Text style={styles.title}>🎮 Local Two-Player Match</Text>
+      <Text style={styles.subtitle}>Take turns on the same device to make your moves</Text>
 
       <View style={styles.boardContainer}>
         <ChessBoard />
       </View>
 
       <GeneralButton
-        title="🔄 重新开始对局"
+        title="🔄 Restart Game"
         onPress={resetGame}
         style={styles.button}
         textStyle={styles.buttonText}

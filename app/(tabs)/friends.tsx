@@ -7,15 +7,15 @@ export default function FriendTabScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>👬 好友对战</Text>
-      <Text style={styles.subtitle}>选择你们的对战方式</Text>
+      <Text style={styles.title}>👬 Friend Match</Text>
+      <Text style={styles.subtitle}>Choose how you want to play</Text>
 
       <TouchableOpacity
         style={[styles.card, { backgroundColor: '#1e90ff' }]}
         onPress={() => router.push('/friendBattle/localFriend')}
       >
         <Text style={styles.cardEmoji}>🧍‍♂️🤝🧍‍♂️</Text>
-        <Text style={styles.cardText}>本地对战（同屏轮流）</Text>
+        <Text style={styles.cardText}>Local Match (Shared Screen)</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
@@ -23,7 +23,7 @@ export default function FriendTabScreen() {
         onPress={() => router.push('/friendBattle/remoteFriend')}
       >
         <Text style={styles.cardEmoji}>🌐🏠</Text>
-        <Text style={styles.cardText}>远程对战（在线匹配）</Text>
+        <Text style={styles.cardText}>Online Match (Remote)</Text>
       </TouchableOpacity>
     </View>
   );

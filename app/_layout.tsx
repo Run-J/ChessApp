@@ -19,8 +19,8 @@ export default function RootLayout() {
         <Stack.Screen 
           name="aiBattle/difficulty"
           options={{
-            title: "难度选择",
-            headerBackTitle: "返回",
+            title: "Select Difficulty",
+            headerBackTitle: "Back",
             headerStyle: {
               backgroundColor: '#1e1e2e',  // 背景色
             },
@@ -35,8 +35,8 @@ export default function RootLayout() {
         <Stack.Screen 
           name="aiBattle/aiGame"
           options={{
-            title: "对战中...",
-            headerBackTitle: "退出",
+            title: "In Battle...",
+            headerBackTitle: "Quit",
             headerStyle: {
               backgroundColor: '#1e1e2e',  // 背景色
             },
@@ -51,8 +51,8 @@ export default function RootLayout() {
         <Stack.Screen 
           name="friendBattle/localFriend"
           options={{
-            title: "本地对战中...",
-            headerBackTitle: "返回",
+            title: "Local Match...",
+            headerBackTitle: "Back",
             headerStyle: {
               backgroundColor: '#1e1e2e',
             },
@@ -67,8 +67,8 @@ export default function RootLayout() {
         <Stack.Screen 
           name="friendBattle/remoteFriend"
           options={{
-            title: "加入棋局",
-            headerBackTitle: "返回",
+            title: "Join Game",
+            headerBackTitle: "Back",
             headerStyle: {
               backgroundColor: '#1e1e2e',
             },
@@ -84,7 +84,7 @@ export default function RootLayout() {
         <Stack.Screen
           name="+not-found"
           options={{
-            title: "访问了不存在的页面",
+            title: "Page Not Found",
             headerShown: true,
             headerBackVisible: false,
           }}

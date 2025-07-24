@@ -8,8 +8,8 @@ export default function LobbyTabScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>匹配大厅</Text>
-      <Text style={styles.subtitle}>选择一个真实的对手发起挑战</Text>
+      <Text style={styles.title}>Match Lobby</Text>
+      <Text style={styles.subtitle}>Choose an opponent and start your challenge</Text>
 
       <FlatList
         data={fakeAiList}
@@ -18,13 +18,13 @@ export default function LobbyTabScreen() {
         renderItem={({ item }) => (
           <TouchableOpacity
             style={styles.card}
-            disabled={item.status !== '空闲'}
+            disabled={item.status !== 'Available'}
             onPress={() => router.push(`/aiBattle/aiGame?level=${item.level}&source=lobby`)}
           >
             <Text style={styles.avatar}>{item.avatar}</Text>
             <View>
               <Text style={styles.name}>{item.name}</Text>
-              <Text style={styles.level}>状态：{item.status}</Text>
+              <Text style={styles.level}>Status: {item.status}</Text>
             </View>
           </TouchableOpacity>
         )}

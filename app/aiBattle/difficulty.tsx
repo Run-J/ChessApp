@@ -4,14 +4,14 @@ import { useRouter } from 'expo-router';
 import { FlatList, StyleSheet, Text, View } from 'react-native';
 
 const difficultyLevels = [
-  { level: 1, label: '菜鸟' },
-  { level: 3, label: '新手' },
-  { level: 5, label: '进阶' },
-  { level: 7, label: '熟练' },
-  { level: 9, label: '专家' },
-  { level: 11, label: '大师' },
-  { level: 13, label: '超神' },
-  { level: 15, label: 'AI魔王' },
+  { level: 1, label: 'Beginner' },
+  { level: 3, label: 'Novice' },
+  { level: 5, label: 'Intermediate' },
+  { level: 7, label: 'Skilled' },
+  { level: 9, label: 'Expert' },
+  { level: 11, label: 'Master' },
+  { level: 13, label: 'Legendary' },
+  { level: 15, label: 'AI Overlord' },
 ];
 
 export default function DifficultyScreen() {
@@ -26,8 +26,8 @@ export default function DifficultyScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>🎯 难度选择</Text>
-      <Text style={styles.subtitle}>挑战不同等级的智能棋手</Text>
+      <Text style={styles.title}>🎯 Select Difficulty</Text>
+      <Text style={styles.subtitle}>Choose your AI opponent's level</Text>
 
       <FlatList
         data={difficultyLevels}

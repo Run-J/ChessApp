@@ -6,7 +6,7 @@ export default function HomeScreen() {
     <View style={styles.container}>
 
       <Text style={styles.title}>♟️ Chess Master</Text>
-      <Text style={styles.subtitle}>开启你的棋王之路</Text>
+      <Text style={styles.subtitle}>Begin your journey to chess mastery</Text>
     </View>
   );
 }
