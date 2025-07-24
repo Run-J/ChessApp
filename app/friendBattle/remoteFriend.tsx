@@ -114,7 +114,7 @@ export default function RemoteFriendGame() {
             thinking={thinking}
           />
           <GeneralButton
-            title="退出房间"
+            title="Quit the room"
             onPress={() => {
                 // 1. 通知服务器退出
                 if (ws.current?.readyState === WebSocket.OPEN) {
